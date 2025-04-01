@@ -1,5 +1,14 @@
 # Aleph-10 Project Tasks
 
+## TOP PRIORITY: Jest to Vitest Migration
+
+- [ ] Remove Jest configuration files (jest.config.js, jest.setup.js)
+- [ ] Create Vitest configuration (vitest.config.ts)
+- [ ] Update test setup files for Vitest compatibility
+- [ ] Update existing tests for Vitest syntax (if needed)
+- [ ] Verify all tests run successfully with Vitest
+- [ ] Remove Jest dependencies from package.json
+
 ## Project Setup and Refactoring
 
 - [x] Review existing codebase (April 1, 2025)
@@ -8,7 +17,7 @@
 - [x] Refactor existing weather functionality into modules (April 1, 2025)
 - [x] Set up project folder structure (April 1, 2025)
 - [x] Configure ESLint and Prettier (April 1, 2025)
-- [ ] Add Jest for testing
+- [ ] ~Add Jest for testing~ REPLACED BY VITEST (April 1, 2025)
 
 ## Vector Memory Implementation
 
@@ -45,7 +54,6 @@
 
 ## Next Steps
 
-- [ ] Add Jest testing configuration
 - [ ] Implement integration tests
 - [ ] Add Docker support
 - [ ] Enhance error handling

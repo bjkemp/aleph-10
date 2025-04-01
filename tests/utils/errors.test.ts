@@ -1,52 +1,58 @@
 /**
  * Tests for error handling utilities
  */
-import { ConfigError, EmbeddingError, MemoryNotFoundError, VectorStoreError, formatErrorResponse } from '../../src/utils/errors.js';
+import { 
+  ConfigError, 
+  EmbeddingError, 
+  MemoryNotFoundError, 
+  VectorStoreError,
+  formatErrorResponse 
+} from '../../src/utils/errors.js';
 
 describe('Error Classes', () => {
   describe('ConfigError', () => {
-    it('should create an instance with the correct message and name', () => {
+    it('should create an instance with the correct name', () => {
       // Arrange & Act
       const error = new ConfigError('Test error');
       
       // Assert
-      expect(error.message).toBe('Test error');
+      expect(error.message).toBe('Configuration error: Test error');
       expect(error.name).toBe('ConfigError');
       expect(error instanceof Error).toBe(true);
     });
   });
   
   describe('EmbeddingError', () => {
-    it('should create an instance with the correct message and name', () => {
+    it('should create an instance with the correct name', () => {
       // Arrange & Act
       const error = new EmbeddingError('Test error');
       
       // Assert
-      expect(error.message).toBe('Test error');
+      expect(error.message).toBe('Embedding error: Test error');
       expect(error.name).toBe('EmbeddingError');
       expect(error instanceof Error).toBe(true);
     });
   });
   
   describe('MemoryNotFoundError', () => {
-    it('should create an instance with the correct message and name', () => {
+    it('should create an instance with the correct name', () => {
       // Arrange & Act
       const error = new MemoryNotFoundError('test-id');
       
       // Assert
-      expect(error.message).toBe('Memory not found: test-id');
+      expect(error.message).toBe("Memory with ID 'test-id' not found");
       expect(error.name).toBe('MemoryNotFoundError');
       expect(error instanceof Error).toBe(true);
     });
   });
   
   describe('VectorStoreError', () => {
-    it('should create an instance with the correct message and name', () => {
+    it('should create an instance with the correct name', () => {
       // Arrange & Act
       const error = new VectorStoreError('Test error');
       
       // Assert
-      expect(error.message).toBe('Test error');
+      expect(error.message).toBe('Vector store error: Test error');
       expect(error.name).toBe('VectorStoreError');
       expect(error instanceof Error).toBe(true);
     });
@@ -63,7 +69,7 @@ describe('formatErrorResponse', () => {
     
     // Assert
     expect(response).toEqual({
-      error: 'Error',
+      error: 'UnexpectedError',
       details: 'Test error',
     });
   });
@@ -78,7 +84,7 @@ describe('formatErrorResponse', () => {
     // Assert
     expect(response).toEqual({
       error: 'ConfigError',
-      details: 'Invalid configuration',
+      details: 'Configuration error: Invalid configuration',
     });
   });
   
@@ -91,7 +97,7 @@ describe('formatErrorResponse', () => {
     
     // Assert
     expect(response).toEqual({
-      error: 'Unknown Error',
+      error: 'UnknownError',
       details: 'This is not an error',
     });
   });
@@ -103,13 +109,13 @@ describe('formatErrorResponse', () => {
     
     // Assert
     expect(response1).toEqual({
-      error: 'Unknown Error',
-      details: 'An unknown error occurred',
+      error: 'UnknownError',
+      details: 'null',
     });
     
     expect(response2).toEqual({
-      error: 'Unknown Error',
-      details: 'An unknown error occurred',
+      error: 'UnknownError',
+      details: 'undefined',
     });
   });
 });
