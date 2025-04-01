@@ -5,41 +5,40 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { registerMemoryTools } from "../../../src/memory/tools.js";
 import { MemoryItem, SearchResult, VectorStore } from "../../../src/types/memory.js";
 import { MemoryNotFoundError } from "../../../src/utils/errors.js";
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
-// Mock McpServer
-jest.mock("@modelcontextprotocol/sdk/server/mcp.js", () => {
+// Mock the McpServer class
+vi.mock("@modelcontextprotocol/sdk/server/mcp.js", () => {
   return {
-    McpServer: jest.fn().mockImplementation(() => {
-      return {
-        tool: jest.fn(),
-      };
-    }),
+    McpServer: vi.fn(() => ({
+      tool: vi.fn(),
+    })),
   };
 });
 
 describe('Memory Tools', () => {
-  let mockServer: jest.Mocked<McpServer>;
-  let mockVectorStore: jest.Mocked<VectorStore>;
+  let mockServer: any;
+  let mockVectorStore: any;
   
   beforeEach(() => {
     // Create mock server
-    mockServer = new McpServer() as jest.Mocked<McpServer>;
+    mockServer = new McpServer();
     
     // Create mock vector store
     mockVectorStore = {
-      add: jest.fn(),
-      get: jest.fn(),
-      update: jest.fn(),
-      delete: jest.fn(),
-      search: jest.fn(),
-      searchByText: jest.fn(),
-      getStats: jest.fn(),
-      clear: jest.fn(),
-      initialize: jest.fn(),
-    } as unknown as jest.Mocked<VectorStore>;
+      add: vi.fn(),
+      get: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      search: vi.fn(),
+      searchByText: vi.fn(),
+      getStats: vi.fn(),
+      clear: vi.fn(),
+      initialize: vi.fn(),
+    };
     
     // Reset mocks
-    jest.clearAllMocks();
+    vi.resetAllMocks();
   });
   
   describe('registerMemoryTools', () => {
@@ -51,7 +50,7 @@ describe('Memory Tools', () => {
       expect(mockServer.tool).toHaveBeenCalledTimes(5);
       
       // Check tool registrations by name
-      const toolNames = (mockServer.tool as jest.Mock).mock.calls.map(call => call[0]);
+      const toolNames = mockServer.tool.mock.calls.map((call: any) => call[0]);
       expect(toolNames).toContain('memory-store');
       expect(toolNames).toContain('memory-retrieve');
       expect(toolNames).toContain('memory-update');
@@ -77,7 +76,8 @@ describe('Memory Tools', () => {
       
       let storeToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      // Set up the mock to capture the callback function
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-store') {
           storeToolCallback = callback;
         }
@@ -85,6 +85,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback 
+      expect(storeToolCallback).toBeDefined();
       
       // Act
       const result = await storeToolCallback?.({
@@ -121,7 +124,7 @@ describe('Memory Tools', () => {
       
       let storeToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-store') {
           storeToolCallback = callback;
         }
@@ -129,6 +132,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(storeToolCallback).toBeDefined();
       
       // Act
       const result = await storeToolCallback?.({
@@ -186,7 +192,7 @@ describe('Memory Tools', () => {
       
       let retrieveToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-retrieve') {
           retrieveToolCallback = callback;
         }
@@ -194,6 +200,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(retrieveToolCallback).toBeDefined();
       
       // Act
       const result = await retrieveToolCallback?.({
@@ -237,7 +246,7 @@ describe('Memory Tools', () => {
       
       let retrieveToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-retrieve') {
           retrieveToolCallback = callback;
         }
@@ -245,6 +254,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(retrieveToolCallback).toBeDefined();
       
       // Act
       const result = await retrieveToolCallback?.({
@@ -295,7 +307,7 @@ describe('Memory Tools', () => {
       
       let updateToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-update') {
           updateToolCallback = callback;
         }
@@ -303,6 +315,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(updateToolCallback).toBeDefined();
       
       // Act
       const result = await updateToolCallback?.({
@@ -344,7 +359,7 @@ describe('Memory Tools', () => {
       
       let updateToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-update') {
           updateToolCallback = callback;
         }
@@ -352,6 +367,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(updateToolCallback).toBeDefined();
       
       // Act
       const result = await updateToolCallback?.({
@@ -381,7 +399,7 @@ describe('Memory Tools', () => {
       
       let deleteToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-delete') {
           deleteToolCallback = callback;
         }
@@ -389,6 +407,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(deleteToolCallback).toBeDefined();
       
       // Act
       const result = await deleteToolCallback?.({
@@ -418,7 +439,7 @@ describe('Memory Tools', () => {
       
       let deleteToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-delete') {
           deleteToolCallback = callback;
         }
@@ -426,6 +447,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(deleteToolCallback).toBeDefined();
       
       // Act
       const result = await deleteToolCallback?.({
@@ -462,7 +486,7 @@ describe('Memory Tools', () => {
       
       let statsToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-stats') {
           statsToolCallback = callback;
         }
@@ -470,6 +494,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(statsToolCallback).toBeDefined();
       
       // Act
       const result = await statsToolCallback?.({});
@@ -495,7 +522,7 @@ describe('Memory Tools', () => {
       
       let statsToolCallback: Function | undefined;
       
-      mockServer.tool.mockImplementation((name, _desc, _schema, callback) => {
+      mockServer.tool.mockImplementation((name: string, _desc: string, _schema: any, callback: Function) => {
         if (name === 'memory-stats') {
           statsToolCallback = callback;
         }
@@ -503,6 +530,9 @@ describe('Memory Tools', () => {
       
       // Register tools to capture callbacks
       registerMemoryTools(mockServer, mockVectorStore);
+      
+      // Make sure we have a callback
+      expect(statsToolCallback).toBeDefined();
       
       // Act
       const result = await statsToolCallback?.({});

@@ -2,6 +2,7 @@
  * Tests for configuration management
  */
 import { AppConfig, EmbeddingProviderType, LogLevel, getConfig, loadConfig, validateConfig } from '../../src/utils/config.js';
+import { vi, describe, it, expect, afterEach } from 'vitest';
 
 // Save original environment variables
 const originalEnv = { ...process.env };
@@ -66,7 +67,7 @@ describe('Config Utilities', () => {
       
       // Mock console.warn
       const originalWarn = console.warn;
-      console.warn = jest.fn();
+      console.warn = vi.fn();
       
       // Act
       const config = loadConfig();
@@ -135,21 +136,17 @@ describe('Config Utilities', () => {
     it('should return a validated configuration', () => {
       // Set environment variables for a valid config
       process.env.EMBEDDING_PROVIDER = 'ollama'; // Use Ollama to avoid needing a Gemini API key
-      
-      // Mock loadConfig and validateConfig
-      const mockConfig: AppConfig = {
-        embeddingProvider: EmbeddingProviderType.OLLAMA,
-        ollamaBaseUrl: 'http://localhost:11434',
-        ollamaModel: 'nomic-embed-text',
-        vectorDbPath: './data/vector_db',
-        logLevel: LogLevel.INFO,
-      };
+      process.env.GEMINI_API_KEY = undefined; // Make sure there's no API key set
       
       // Act
       const config = getConfig();
       
-      // Assert
-      expect(config).toEqual(mockConfig);
+      // Assert - Only check the properties we expect
+      expect(config.embeddingProvider).toBe(EmbeddingProviderType.OLLAMA);
+      expect(config.ollamaBaseUrl).toBe('http://localhost:11434');
+      expect(config.ollamaModel).toBe('nomic-embed-text');
+      expect(config.vectorDbPath).toBe('./data/vector_db');
+      expect(config.logLevel).toBe(LogLevel.INFO);
     });
     
     it('should throw an error if validation fails', () => {

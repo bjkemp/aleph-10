@@ -102,13 +102,23 @@ aleph-10/
 │   ├── memory/                  # Memory management module
 │   ├── utils/                   # Shared utilities
 │   └── types/                   # TypeScript type definitions
-└── tests/                       # Test files
+├── tests/                       # Test files
+└── vitest.config.ts             # Vitest configuration
 ```
 
 ### Running Tests
 
+The project uses Vitest for testing. Run tests with:
+
 ```bash
+# Run tests once
 pnpm test
+
+# Run tests in watch mode during development
+pnpm test:watch
+
+# Run tests with UI (optional)
+pnpm test:ui
 ```
 
 ### Building
@@ -125,3 +135,4 @@ This project is licensed under the ISC License.
 
 - [Model Context Protocol](https://github.com/anthropics/model-context-protocol)
 - [National Weather Service API](https://www.weather.gov/documentation/services-web-api)
+- [Vitest](https://vitest.dev/) - Next generation testing framework

@@ -3,18 +3,27 @@
  */
 import { InMemoryVectorStore } from '../../src/memory/store.js';
 import { EmbeddingProvider, MemoryItem } from '../../src/types/memory.js';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 
 // Mock embedding provider for testing
 class MockEmbeddingProvider implements EmbeddingProvider {
   name = 'mock';
+  private dimensions = 16; // Changed to match the expected dimensions
   
   async getEmbedding(text: string): Promise<number[]> {
-    // Simple mock implementation: convert each character to its code point and normalize
-    return Array.from(text).map(c => c.charCodeAt(0) / 255);
+    // Create a fixed-length embedding vector
+    const embedding = new Array(this.dimensions).fill(0);
+    
+    // Fill with some deterministic values based on the text
+    for (let i = 0; i < Math.min(text.length, this.dimensions); i++) {
+      embedding[i] = text.charCodeAt(i) / 255;
+    }
+    
+    return embedding;
   }
   
   getDimensions(): number {
-    return 10; // Arbitrary dimension for testing
+    return this.dimensions;
   }
 }
 
